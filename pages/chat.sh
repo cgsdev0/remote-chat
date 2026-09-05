@@ -18,7 +18,7 @@ if [[ -n "$WHO" ]]; then
   USER_DATA=$(curl -Ss "https://api.twitch.tv/helix/users?id=${WHO}" \
     -H "Client-ID: ${TWITCH_CLIENT_ID}" \
     -H "Authorization: Bearer ${TWITCH_ACCESS_TOKEN}")
-  AT_STRING="@$(echo "$USER_DATA" | jq -r '.display_name') "
+  AT_STRING="@$(echo "$USER_DATA" | jq -r '.data[0].display_name') "
 fi
 
 CHAN=just__jane
