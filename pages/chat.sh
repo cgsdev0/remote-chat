@@ -11,7 +11,7 @@ source refresh badcop_
 source twitch_secrets badcop_
 
 CHAN=just__jane
-MESSAGE="hello world"
+MESSAGE="hey! you! yeah you! you need a license for that!!! (see redeems)"
 
 auth() {
     printf "%s\r\n" \
