@@ -12,9 +12,11 @@ WHO="${QUERY_PARAMS[user_id]//[^0-9]}"
 source refresh badcop_
 source twitch_secrets badcop_
 
+debug "who: '$WHO'"
 AT_STRING=
 if [[ -n "$WHO" ]]; then
-  USER_DATA=$(curl "https://api.twitch.tv/helix/users?id=${WHO}" \
+  USER_DATA=$(curl -Ss "https://api.twitch.tv/helix/users?id=${WHO}" \
+    -H "Client-ID: ${TWITCH_CLIENT_ID}" \
     -H "Authorization: Bearer ${TWITCH_ACCESS_TOKEN}")
   AT_STRING="@$(echo "$USER_DATA" | jq -r '.display_name') "
 fi
