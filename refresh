@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -eu
+
+source .twitch_secrets "$1"
+
+NOW=$(date +%s)
+if [[ -f .secrets/twitch/$1/expires ]]; then
+  EXPIRY=$(cat .secrets/twitch/$1/expires)
+else
+  EXPIRY=0
+fi
+if [[ "$NOW" -lt "$EXPIRY" ]]; then
+  return
+fi
+RESPONSE=$(curl -Ss -X POST "https://id.twitch.tv/oauth2/token" \
+    -F "client_id=${TWITCH_CLIENT_ID}" \
+    -F "refresh_token=${TWITCH_REFRESH_TOKEN}" \
+    -F "client_secret=${TWITCH_CLIENT_SECRET}" \
+    -F 'grant_type=refresh_token' )
+
+TWITCH_REFRESH_TOKEN=$(echo "$RESPONSE" | jq -r '.refresh_token')
+TWITCH_ACCESS_TOKEN=$(echo "$RESPONSE" | jq -r '.access_token')
+EXPIRES_IN=$(echo "$RESPONSE" | jq -r '.expires_in')
+
+if [[ "$EXPIRES_IN" != "null" ]]; then
+  echo "$((NOW + EXPIRES_IN))" > .secrets/twitch/$1/expires
+fi
+if [[ "$TWITCH_ACCESS_TOKEN" != "null" ]]; then
+  echo "$TWITCH_ACCESS_TOKEN" > .secrets/twitch/$1/access
+fi
+if [[ "$TWITCH_REFRESH_TOKEN" != "null" ]]; then
+  echo "$TWITCH_REFRESH_TOKEN" > .secrets/twitch/$1/refresh
+fi
+
