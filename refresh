@@ -2,7 +2,7 @@
 
 set -eu
 
-source .twitch_secrets "$1"
+source twitch_secrets "$1"
 
 NOW=$(date +%s)
 if [[ -f .secrets/twitch/$1/expires ]]; then
