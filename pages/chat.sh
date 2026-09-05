@@ -7,7 +7,7 @@ if [[ "${HTTP_HEADERS[token]}" != "$SHARED_SECRET" ]]; then
   return $(status_code 401)
 fi
 
-refresh badcop_
+source refresh badcop_
 source twitch_secrets badcop_
 
 CHAN=just__jane
